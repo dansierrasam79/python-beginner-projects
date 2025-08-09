@@ -1,86 +1,58 @@
-def registeryourself(name, password):
-    # Create a string of the name and password into a single line
-    usrinfostring = name.strip() + " " + password.strip() + "\n"
-    # Check for duplicate record in the usersdata file
-    with open("usersdata.txt", "r") as f:
-        lines = f.readlines()
-        for line in lines:
-            name_array = line.split(" ")
-            if name == name_array[0]:
-                return False
+import sys
+from PyQt5.QtWidgets import (
+    QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox
+)
+from PyQt5.QtCore import Qt
 
-    with open("usersdata.txt", "a") as f:
-        f.write(usrinfostring)
-        return True
+class LoginWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Login Page")
+        self.setGeometry(600, 300, 300, 150)
+        self.setup_ui()
 
-def logintosystem(name, password):
-    with open("usersdata.txt", "r") as f:
-        lines = f.readlines()
-        for line in lines:
-            name_array = line.split(" ")
-            if name == name_array[0].strip() and password == name_array[1].strip():
-                return True
-    return False
+    def setup_ui(self):
+        layout = QVBoxLayout()
 
-def main():
-    print()
-    print("MENU")
-    print("1. Register an account")
-    print("2. Log into the system")
-    print("3. Exit")
-    usrput = int(input("Please make a selection: "))
-    print("Thank you!")
-    return usrput
+        self.label_username = QLabel("Username:")
+        self.input_username = QLineEdit()
+        self.input_username.setPlaceholderText("Enter your username")
 
-def pswrdinput():
-    name = input("Please enter your username: ")
-    password = getpass.getpass(prompt = "Please enter your password: ")
-    passwordconf = getpass.getpass(prompt = "Please enter your password again: ")
-    if password == passwordconf:
-        name_password.append(name)
-        name_password.append(password)
-        return True
-    else:
-        return False
+        self.label_password = QLabel("Password:")
+        self.input_password = QLineEdit()
+        self.input_password.setPlaceholderText("Enter your password")
+        self.input_password.setEchoMode(QLineEdit.Password)
+
+        self.btn_login = QPushButton("Login")
+        self.btn_login.clicked.connect(self.check_login)
+
+        self.message_label = QLabel("")
+        self.message_label.setAlignment(Qt.AlignCenter)
+
+        layout.addWidget(self.label_username)
+        layout.addWidget(self.input_username)
+        layout.addWidget(self.label_password)
+        layout.addWidget(self.input_password)
+        layout.addWidget(self.btn_login)
+        layout.addWidget(self.message_label)
+
+        self.setLayout(layout)
+
+    def check_login(self):
+        username = self.input_username.text()
+        password = self.input_password.text()
+
+        # Simple hardcoded check for demo
+        if username == "admin" and password == "password123":
+            self.message_label.setText("Login successful!")
+            self.message_label.setStyleSheet("color: green;")
+            QMessageBox.information(self, "Success", "You have logged in successfully.")
+        else:
+            self.message_label.setText("Invalid username or password.")
+            self.message_label.setStyleSheet("color: red;")
 
 if __name__ == "__main__":
-    import sys, getpass
-    name_password = []
-    count = 0        
-    while True:
-        usrput = main()
-        if usrput == 1:
-            while True:
-                print()
-                print("USERNAME & PASSWORD ENTRY")
-                if pswrdinput():
-                    print()
-                    print("REGISTRATION")
-                    if registeryourself(name_password[0],name_password[1]):
-                        name_password = []
-                        print("Registration complete!")
-                        print()
-                        break;
-                    else:
-                        name_password = []
-                        print("Kindly pick another username. Duplicate found.")
-                        print()
-                        break;
-                else:
-                    count += 1
-                    if count < 3:
-                        print("Passwords do not match! Please enter your username and password once more!")
-                        count = 0
-                        continue;
-                    else:
-                        sys.exit("You have exceed three tries. Goodbye!")
-        elif usrput == 2:
-            print("LOGIN")
-            name = input("Please enter your username: ")
-            password = getpass.getpass(prompt = "Please enter your password: ")
-            if logintosystem(name, password):
-                print("You are logged in")
-            else:
-                print("Incorrect username or password")
-        elif usrput == 3:
-            sys.exit("Bye bye birdie!")
+    app = QApplication(sys.argv)
+    window = LoginWindow()
+    window.show()
+    sys.exit(app.exec_())
