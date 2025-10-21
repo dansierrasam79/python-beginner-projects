@@ -1,6 +1,15 @@
-# Assign age and city to variables
-age = 25
-city = "Kolkata"
+# Store two numbers in variables
+num1 = 10
+num2 = 5
 
-# Print the sentence
-print(f"I am {age} years old and live in {city}.")
+# Perform arithmetic operations
+addition = num1 + num2
+subtraction = num1 - num2
+multiplication = num1 * num2
+division = num1 / num2  # Returns a float
+
+# Print the results
+print("Addition:", addition)
+print("Subtraction:", subtraction)
+print("Multiplication:", multiplication)
+print("Division:", division)
